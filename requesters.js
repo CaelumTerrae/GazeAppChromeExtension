@@ -69,11 +69,10 @@ const makeGazeFunction = (updatePosition) => {
               if (point){
                 updatePosition(point);
               }
+              onSuccess();
             });
         } catch (error) {
             // don't do anything here
-        } finally {
-            onSuccess();
         }
     }
 }
