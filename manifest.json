@@ -1,7 +1,7 @@
 {
     "name": "Gaze Extension",
     "description": "Visualizes another user's gaze on a chrome page",
-    "version": "1.0",
+    "version": "1.2",
     "options_page": "options.html",
     "permissions": [
       "activeTab",
