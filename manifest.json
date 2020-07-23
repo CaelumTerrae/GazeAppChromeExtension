@@ -16,6 +16,7 @@
         "js": ["requesters.js", "main.js"]
       }
     ],
+    "content_security_policy": "script-src 'self' https://api.gazerecorder.com/GazeCloudAPI.js object-src 'self'",
     "browser_action": {
       "default_title": "Visualize partner's data ",
       "default_popup": "options.html"
