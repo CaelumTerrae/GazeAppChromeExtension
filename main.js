@@ -6,6 +6,7 @@ const defaultRefreshRate = 10; // need to do research on this perhaps
 // Visualization Vars:
 let circleDiv = null;
 let intervalID = null;
+let debugDiv = null;
 
 let circleX = 0; // may go unused
 let circleY = 0;
@@ -21,12 +22,33 @@ let ourID = null;
 let otherID = null;
 let refreshRate = null; // need to change Min and Maxes for refreshRates.
 let masterSwitch = null;
+let debugActive = null;
+let lastTime = null;
+let latencySUM = 0;
+let receivedTransmissions = 0;
+let latencyAVERAGE = null;
 
 const updatePosition = (point) => {
     let xPosition = (point.x * documentWidth) - circleRadius;
     let yPosition = (point.y * documentHeight) - circleRadius;
+    let currentInstant = Date.now() / 1000;
     circleDiv.style.left = xPosition.toString() + "px";
-    circleDiv.style.top = yPosition.toString() + "px"; 
+    circleDiv.style.top = yPosition.toString() + "px";
+    latencySUM += (currentInstant - point.time);
+    receivedTransmissions += 1;
+    debugDiv.innerHTML = ( 
+    `<p>Last Latency: ${currentInstant - point.time}</p>
+    <p>Average Latency: ${latencyAVERAGE}</p>`);
+    
+    if(currentInstant - lastTime >= 5){
+        latencyAVERAGE = latencySUM / (currentInstant - lastTime);
+        latencySUM = 0;
+        receivedTransmissions = 0;
+        lastTime = currentInstant;
+        debugDiv.innerHTML = (
+        `<p>Last Latency: ${currentInstant - point.time}</p>
+        <p>Average Latency: ${latencyAVERAGE}</p>`);
+    }
 }
 
 // onload, will initialize our global vars. Want to make sure this triggers each time a page is loaded.
@@ -45,8 +67,20 @@ window.addEventListener('load', (event) => {
     documentWidth = window.outerWidth;
     documentHeight = window.outerHeight;
 
+    // creates the debug display (update later to turn on and off with debugmode) 
+    debugDiv = document.createElement('div');
+    debugDiv.id = "debugDisplay";
+    debugDiv.style.position = "fixed";
+    debugDiv.style.top = "10px";
+    debugDiv.style.right = "10px";
+    debugDiv.style.visibility = "hidden";
+    debugDiv.innerHTML += "<p>Average Latency: Querying...</p>"
+    document.body.appendChild(debugDiv);
+
+    lastTime = Date.now() / 1000;
+
     // check if information is already in the store, and if it is, then initialize our values properly!
-    chrome.storage.sync.get(['userID', 'refreshRate', 'masterSwitch'], function(items) {
+    chrome.storage.sync.get(['userID', 'refreshRate', 'masterSwitch', 'debugMode'], function(items) {
         ourID = items.userID ?? 1;
         otherID = 3 - ourID;
 
@@ -66,25 +100,24 @@ window.addEventListener('load', (event) => {
         if (masterSwitch) {
             circleDiv.style.visibility = "visible";
             const throttledGetNewGaze = fetchThrottle(makeGazeFunction(updatePosition));
+            clearInterval(intervalID)
             intervalID = setInterval(throttledGetNewGaze, 1000/refreshRate);
         }
-    });
 
-    // setInterval(() => {
-    //     firstPosition = !(firstPosition);
-    //     if (firstPosition) {
-    //         circleDiv.style.top = "100px"
-    //         circleDiv.style.left = "100px"
-    //     } else {
-    //         circleDiv.style.top = "200px"
-    //         circleDiv.style.left = "200px"
-    //     }
-    // }, 250)
+        if (items.debugMode){
+            debugActive = (items.debugMode == 1);
+        } else {
+            debugActive = false;
+        }
+
+        if (debugActive) {
+            debugDiv.style.visibility = "visible";
+        }
+
+    });
 });
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
-    // update depending on changes:
-
     // masterSwitch changes work!
     if (changes["masterSwitch"]){
         masterSwitch = changes["masterSwitch"].newValue == 1;
@@ -99,6 +132,17 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
             clearInterval(intervalID);
             intervalID = null;
         }
+    }
+
+    if (changes["debugMode"]){
+        debugActive = changes["debugMode"].newValue == 1;
+        console.log("Debug Mode has changed to ", debugActive);
+        if(debugActive){
+            debugDiv.style.visibility = "visible";
+        } else {
+            debugDiv.style.visibility = "hidden";
+        }
+        
     }
 
     if (changes["refreshRate"]){
@@ -117,14 +161,4 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
             intervalID = setInterval(throttledGetNewGaze, 1000/refreshRate);
         }
     }
-
-    // for (var key in changes) {
-    //     var storageChange = changes[key];
-    //     console.log('Storage key "%s" in namespace "%s" changed. ' +
-    //                 'Old value was "%s", new value is "%s".',
-    //                 key,
-    //                 namespace,
-    //                 storageChange.oldValue,
-    //                 storageChange.newValue);
-    // }
 });

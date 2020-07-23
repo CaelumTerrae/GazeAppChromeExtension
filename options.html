@@ -108,13 +108,21 @@
     <label for="refreshRate">
       <span>Choose query rate:</span><input type="range" class="input-field" id="refreshRate" name="refreshRate" min="5" max="30"/>
     </label>
-    <label for="masterSwitch"><span>Turn On/Off</span>
+    <label for="masterSwitch">
+      <span>Turn On/Off</span>
       <select id="masterSwitch" name="masterSwitch" class="select-field">
         <option value="0">Off</option>
         <option value="1">On</option>
       </select>
     </label>
-    <label><span> </span><button type='submit' value='Submit' id='optionsSubmit'>Submit</button></label>
+    <label for="debugMode">
+      <span>Debug Mode</span>
+      <select id="debugMode" name="debugMode" class="select-field">
+        <option value="0">Off</option>
+        <option value="1">On</option>
+      </select>
+    </label>
+    <span> </span><button type='submit' value='Submit' id='optionsSubmit'>Submit</button>
     </form>
     </div>
   </body>
