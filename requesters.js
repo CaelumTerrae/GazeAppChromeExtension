@@ -32,30 +32,12 @@ const fetchThrottle = (func) => {
         if (finishedFetch){
             finishedFetch = false;
             func(onComplete);
-            console.log("full complete")
         }else{
             return
         }
     }
     return throttleFuncHandle;
 }
-
-// const getNewGazePosition = (updatePosition) => {
-//     try {
-//         fetch(baseUrl + '?id=' + otherID)
-//         .then((response) => {
-//           return response.json();
-//         })
-//         .then((myJson) => {
-//           point = myJson[myJson.length - 1];
-//           if (point){
-//             updatePosition(point);
-//           }
-//         });
-//     } catch (error) {
-//         // don't do anything here
-//     }
-// }
 
 const makeGazeFunction = (updatePosition) => {
     return (onSuccess) => {

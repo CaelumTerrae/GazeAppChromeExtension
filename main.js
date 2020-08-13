@@ -2,10 +2,12 @@
 // Constants:
 const circleRadius = 40; // add option for this in options.html
 const defaultRefreshRate = 10; // need to do research on this perhaps
+const timeToFade = 250; // quarter of a second can be kinda distracting
 
 // Visualization Vars:
 let circleDiv = null;
 let intervalID = null;
+let fadeTimerID = null;
 let debugDiv = null;
 
 let circleX = 0; // may go unused
@@ -28,6 +30,20 @@ let latencySUM = 0;
 let receivedTransmissions = 0;
 let latencyAVERAGE = null;
 
+
+const fadeCircle = () => {
+    console.log("circle should start fading")
+    circleDiv.style.opacity = "0"
+}
+
+// when called on timerID will reset the timer
+const resetTimer = () => {
+    clearTimeout(fadeTimerID);
+    circleDiv.style.opacity = "0.8"
+    fadeTimerID = setTimeout(fadeCircle, timeToFade);
+    return;
+}
+
 const updatePosition = (point) => {
     let xPosition = (point.x * documentWidth) - circleRadius;
     let yPosition = (point.y * documentHeight) - circleRadius;
@@ -49,6 +65,7 @@ const updatePosition = (point) => {
         `<p>Last Latency: ${currentInstant - point.time}</p>
         <p>Average Latency: ${latencyAVERAGE}</p>`);
     }
+    resetTimer()
 }
 
 // onload, will initialize our global vars. Want to make sure this triggers each time a page is loaded.
@@ -59,8 +76,9 @@ window.addEventListener('load', (event) => {
     circleDiv.style.position = "fixed";
     circleDiv.style.zIndex = "10000000"; // just has to be a large constant so that value appears over other parts of page.
     circleDiv.style.visibility = "hidden"; // change to hidden after
-    circleDiv.innerHTML += "<svg><circle cx='50' cy='50' r='40' stroke='gray' stroke-opacity='50%' stroke-width='4' fill='none' z-index='100000000000'/></svg>";
-    circleDiv.style.transition = "0.1s";
+    circleDiv.innerHTML += "<svg><circle cx='50' cy='50' r='40' stroke='gray' stroke-opacity='50%' stroke-width='2' fill='none' z-index='100000000000'/></svg>";
+    circleDiv.style.transition = "left 0.1s linear, top 0.1s linear, opacity 0.5s linear";
+    circleDiv.style.opacity = "0.8"
     document.body.appendChild(circleDiv);
 
     // initialize document-related vars
@@ -73,6 +91,7 @@ window.addEventListener('load', (event) => {
     debugDiv.style.position = "fixed";
     debugDiv.style.top = "10px";
     debugDiv.style.right = "10px";
+    debugDiv.style.zIndex = "100000000"; // same as circleDiv
     debugDiv.style.visibility = "hidden";
     debugDiv.innerHTML += "<p>Average Latency: Querying...</p>"
     document.body.appendChild(debugDiv);

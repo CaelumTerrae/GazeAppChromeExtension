@@ -18,7 +18,8 @@ document.getElementById('optionsSubmit').onclick = () => {
 }
 
 document.getElementById('openButton').onclick = () => {
-  chrome.tabs.create({ url: "/gazetracker/index.html" })
+  serverUrl = "https://gaze-app.herokuapp.com/"
+  chrome.tabs.create({ url: serverUrl })
 }
 
 document.addEventListener('DOMContentLoaded', () => {

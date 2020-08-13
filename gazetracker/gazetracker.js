@@ -1,8 +1,22 @@
+// This method of adding event listeners to a static page works, but
+// isn't optimal for a few reasons:
+// There may be situations where there are functions that are inline in
+// the GazeCloudAPI script that I am unaware about, and thus cannot
+// convert from inline into an event listener. It may be possible
+// to write a script to do this, but it ends up being more work than
+// just exposing a static page that the server will serve, that has the same
+// html, and inline javascript.
+// To see why this problem exists, refer to: 
+// https://developer.chrome.com/extensions/contentSecurityPolicy#JSExecution
 let userId = 1;
-
 document.getElementById('start').onclick = () => {
-    console.log("broshut the fuck up")
     GazeCloudAPI.StartEyeTracking();
+    setTimeout(() =>{
+        calibratebtn = document.getElementById('_ButtonCalibrateId')
+        document.getElementById('_ButtonCalibrateId').onclick = () => {
+            GazeCloudAPI.ShowCalibration();
+        }
+    },1000)
 }
 
 document.getElementById('stop').onclick = () => {
@@ -10,10 +24,9 @@ document.getElementById('stop').onclick = () => {
 }
 
 document.getElementById('user').onchange = () => {
-    console.log("yeo")
+    console.log("User changed in GazeTracker static page")
     userId = document.getElementById("user").value;
 }
-
 
 function PlotGaze(GazeData) {
     /*
