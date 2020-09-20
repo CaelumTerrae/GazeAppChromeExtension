@@ -17,9 +17,28 @@ document.getElementById('optionsSubmit').onclick = () => {
   window.close();
 }
 
-document.getElementById('openButton').onclick = () => {
+document.getElementById('openGazeCloudButton').onclick = () => {
   serverUrl = "https://gaze-app.herokuapp.com/"
   chrome.tabs.create({ url: serverUrl })
+}
+
+document.getElementById('openWebGazerButton').onclick= () => {
+  serverUrl = "https://webgazer.cs.brown.edu/calibration.html?#"
+  chrome.tabs.create({ url: serverUrl})
+}
+
+document.getElementById('nextButton').onclick = () => {
+  pageOne = document.getElementById('page_one')
+  pageTwo = document.getElementById('page_two')
+  pageOne.style.display = "none"
+  pageTwo.style.display = "unset"
+}
+
+document.getElementById('prevButton').onclick = () => {
+  pageOne = document.getElementById('page_one')
+  pageTwo = document.getElementById('page_two')
+  pageOne.style.display = "unset"
+  pageTwo.style.display = "none"
 }
 
 document.addEventListener('DOMContentLoaded', () => {

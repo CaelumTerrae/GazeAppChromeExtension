@@ -8,6 +8,36 @@
       min-height: 300px;
       font-size: 15px;
     }
+    #page_one {
+      position: relative;
+    }
+    #page_one #openGazeCloudButton {
+      margin: 0;
+      position: absolute;
+      top: 90px;
+      left: 50%;
+      margin-right: -50%;
+      transform: translate(-50%, -50%) 
+    }
+    #page_one #openWebGazerButton {
+      margin: 0;
+      position: absolute;
+      top: 120px;
+      left: 50%;
+      margin-right: -50%;
+      transform: translate(-50%, -50%) 
+    }
+    #page_one #nextButton {
+      margin: 0;
+      position: absolute;
+      top: 150px;
+      left: 50%;
+      margin-right: -50%;
+      transform: translate(-50%, -50%) 
+    }
+    #page_two {
+      display: none;
+    }
     input {
       margin: 5px;
       outline: none;
@@ -95,39 +125,54 @@
   </head>
 
   <body>
-    <div class="form-style-2">
-    <div class="form-style-2-heading">Provide your information</div>
-    <form id="form">
+    <div id="page_one">
+      <div>
+        <button id='openGazeCloudButton'>Open GazeCloudAPI Tracker</button>
+      </div>
+      <div>
+        <button id='openWebGazerButton'>Open Webgazer Tracker</button>
+      </div>
+      <div>
+        <button id='nextButton'>Continue To Settings</button>
+      </div>
+    </div>
 
-    <label for="userSelect"><span>Select a user:</span>
-      <select id="userSelect" name="userSelect" class="select-field">
-        <option value="1">User 1</option>
-        <option value="2">User 2</option>
-      </select>
-    </label>
-    <label for="refreshRate">
-      <span>Choose query rate:</span><input type="range" class="input-field" id="refreshRate" name="refreshRate" min="5" max="30"/>
-    </label>
-    <label for="masterSwitch">
-      <span>Turn On/Off</span>
-      <select id="masterSwitch" name="masterSwitch" class="select-field">
-        <option value="0">Off</option>
-        <option value="1">On</option>
-      </select>
-    </label>
-    <label for="debugMode">
-      <span>Debug Mode</span>
-      <select id="debugMode" name="debugMode" class="select-field">
-        <option value="0">Off</option>
-        <option value="1">On</option>
-      </select>
-    </label>
-    <button type='submit' value='Submit' id='optionsSubmit'>Submit</button>
-    <button id='openButton'>Open Eye Tracker</button>
-    </form>
+    <div id="page_two">
+      <form id="form">
+        <div class="form-style-2">
+        <div class="form-style-2-heading">Provide your information</div>
+        <label for="userSelect"><span>Select a user:</span>
+          <select id="userSelect" name="userSelect" class="select-field">
+            <option value="1">User 1</option>
+            <option value="2">User 2</option>
+          </select>
+        </label>
+        <label for="refreshRate">
+          <span>Choose query rate:</span><input type="range" class="input-field" id="refreshRate" name="refreshRate" min="5" max="30"/>
+        </label>
+        <label for="masterSwitch">
+          <span>Turn On/Off</span>
+          <select id="masterSwitch" name="masterSwitch" class="select-field">
+            <option value="0">Off</option>
+            <option value="1">On</option>
+          </select>
+        </label>
+        <label for="debugMode">
+          <span>Debug Mode</span>
+          <select id="debugMode" name="debugMode" class="select-field">
+            <option value="0">Off</option>
+            <option value="1">On</option>
+          </select>
+        </label>
+        <div>
+          <button id='prevButton'>Return to Previous Page</button>
+          <button type='submit' value='Submit' id='optionsSubmit'>Submit</button>
+        </div>
+        
+        </div>
+      </form>      
     </div>
   </body>
-
   <script src="webgazer.js"></script>
   <script src="options.js"></script>
 </html>
